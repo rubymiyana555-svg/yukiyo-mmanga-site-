@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Chapters</title>
+
+<style>
+
+body{
+background:black;
+color:white;
+font-family:sans-serif;
+padding:20px;
+}
+
+h1{
+margin-bottom:20px;
+}
+
+.chapter{
+background:#222;
+padding:12px;
+margin:10px 0;
+border-radius:8px;
+cursor:pointer;
+}
+
+.chapter:hover{
+background:#333;
+}
+
+button{
+padding:8px 15px;
+background:red;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+.admin{
+margin-bottom:30px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1 id="mangaTitle"></h1>
+
+<div class="admin">
+
+<h3>➕ Шинэ бүлэг нэмэх</h3>
+
+<input type="text" id="chapterName" placeholder="Бүлгийн нэр">
+<br><br>
+
+<input type="file" id="imageUpload" multiple>
+<br><br>
+
+<button onclick="createChapter()">Бүлэг нэмэх</button>
+
+</div>
+
+<hr>
+
+<h2>📚 Бүлгүүд</h2>
+
+<div id="chapters"></div>
+
+<script>
+
+let params = new URLSearchParams(location.search)
+let manga = params.get("manga")
+
+document.getElementById("mangaTitle").innerText = manga
+
+let data = JSON.parse(localStorage.getItem("mangaChapters")) || {}
+
+if(!data[manga]){
+data[manga] = []
+}
+
+function save(){
+localStorage.setItem("mangaChapters", JSON.stringify(data))
+}
+
+function render(){
+
+let html=""
+
+data[manga].forEach((ch,i)=>{
+
+html += `
+<div class="chapter" onclick="openChapter(${i})">
+
+📖 ${ch.name}
+
+</div>
+`
+
+})
+
+document.getElementById("chapters").innerHTML = html
+
+}
+
+function openChapter(i){
+
+let chapter = data[manga][i]
+
+let newWindow = window.open()
+
+let html = `
+<html>
+<body style="background:black;text-align:center;margin:0;">
+`
+
+chapter.images.forEach(src=>{
+html += `<img src="${src}" style="width:100%;max-width:800px;">`
+})
+
+html += `
+</body>
+</html>
+`
+
+newWindow.document.write(html)
+
+}
+
+function createChapter(){
+
+let name = document.getElementById("chapterName").value
+let files = document.getElementById("imageUpload").files
+
+let images=[]
+let loaded=0
+
+for(let file of files){
+
+let reader = new FileReader()
+
+reader.onload = function(e){
+
+images.push(e.target.result)
+
+loaded++
+
+if(loaded == files.length){
+
+data[manga].push({
+name:name,
+images:images
+})
+
+save()
+render()
+
+}
+
+}
+
+reader.readAsDataURL(file)
+
+}
+
+}
+
+render()
+
+</script>
+
+</body>
+</html>

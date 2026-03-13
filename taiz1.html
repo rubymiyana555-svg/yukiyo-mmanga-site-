@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Манга бүлгүүд</title>
+
+<style>
+
+body{
+background:#000;
+color:#fff;
+font-family:sans-serif;
+padding:20px;
+}
+
+h1{
+text-align:center;
+}
+
+.chapter{
+margin:15px 0;
+padding:15px;
+background:#222;
+border-radius:10px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.chapter:hover{
+background:#333;
+}
+
+button{
+padding:8px 15px;
+background:#ff3d3d;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+margin-top:10px;
+}
+
+input{
+padding:10px;
+border-radius:6px;
+border:none;
+margin:5px 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1 id="mangaTitle"></h1>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+
+<h3>➕ Бүлэг нэмэх</h3>
+
+<input type="text" id="chapterName" placeholder="Бүлгийн нэр">
+<br><br>
+
+<input type="file" id="imageUpload" multiple>
+<br><br>
+
+<button onclick="createChapter()">➕ Бүлэг нэмэх</button>
+
+<hr>
+
+</div>
+
+<h2>📚 Chapter list</h2>
+
+<div id="chapters"></div>
+
+<script>
+
+let params = new URLSearchParams(window.location.search);
+let manga = params.get("manga");
+
+document.getElementById("mangaTitle").innerText = manga;
+
+// 🔐 ADMIN LOGIN
+let admin=false
+let pass=prompt("Admin password оруул")
+
+if(pass==="1234"){
+admin=true
+}else{
+document.getElementById("adminPanel").style.display="none"
+}
+
+let chapters = JSON.parse(localStorage.getItem(manga)) || [];
+
+function save(){
+localStorage.setItem(manga, JSON.stringify(chapters));
+}
+
+function render(){
+
+let container = document.getElementById("chapters");
+container.innerHTML="";
+
+chapters.slice().reverse().forEach(function(ch,index){
+
+let realIndex = chapters.length - 1 - index;
+
+let div=document.createElement("div");
+div.className="chapter";
+
+let title=document.createElement("h2");
+title.innerText="📚 " + ch.name;
+
+div.appendChild(title);
+
+// 🗑 delete зөвхөн admin
+if(admin){
+
+let del=document.createElement("button");
+del.innerText="🗑 Устгах";
+
+del.onclick=function(e){
+e.stopPropagation();
+chapters.splice(realIndex,1);
+save();
+render();
+};
+
+div.appendChild(del);
+
+}
+
+// 📖 reader
+div.onclick=function(){
+
+location.href=`reader.html?manga=${manga}&chapter=${realIndex}`;
+
+}
+
+container.appendChild(div);
+
+});
+
+}
+
+function createChapter(){
+
+if(!admin){
+alert("Admin биш!")
+return
+}
+
+let name=document.getElementById("chapterName").value;
+let files=document.getElementById("imageUpload").files;
+
+if(!name || files.length==0){
+alert("Бүлгийн нэр болон зураг сонго!");
+return;
+}
+
+let images=[];
+let loaded=0;
+
+for(let i=0;i<files.length;i++){
+
+let reader=new FileReader();
+
+reader.onload=function(e){
+
+images.push(e.target.result);
+loaded++;
+
+if(loaded===files.length){
+
+chapters.push({
+name:name,
+images:images
+});
+
+save();
+render();
+
+}
+
+};
+
+reader.readAsDataURL(files[i]);
+
+}
+
+}
+
+render();
+
+</script>
+
+</body>
+</html>

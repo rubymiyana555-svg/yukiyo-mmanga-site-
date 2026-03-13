@@ -1,0 +1,45 @@
+body{
+background:#0f0f0f;
+color:white;
+font-family:Arial;
+margin:0;
+}
+
+header{
+padding:20px;
+font-size:28px;
+font-weight:bold;
+}
+
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fill,150px);
+gap:20px;
+padding:20px;
+}
+
+.card{
+background:#1a1a1a;
+border-radius:10px;
+padding:10px;
+transition:0.3s;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.card img{
+width:100%;
+border-radius:8px;
+}
+
+.card h3{
+font-size:14px;
+margin:5px 0;
+}
+
+.card p{
+font-size:12px;
+color:#aaa;
+}

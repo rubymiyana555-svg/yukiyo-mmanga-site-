@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Yukiyo Manga</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+<h1>YUKIYO MANGA</h1>
+</header>
+
+<div class="container" id="mangaList">
+
+<div class="card">
+<a href="taiz1.html?manga=taiz">
+<img src="images/1c6285d6-cc17-4625-b3ce-091d06754040.jpg" width="130">
+</a>
+<h3>Тайзны цаана</h3>
+<p>⭐ 4.2 | 👁 3200</p>
+</div>
+
+<div class="card">
+<a href="taiz1.html?manga=kiss">
+<img src="images/39058a46-8592-439f-9e88-cfa831b68964.jpg" width="150">
+</a>
+<h3>Чадах юм бол намайг үнс</h3>
+<p>⭐ 4.5 | 👁 3980</p>
+</div>
+
+<div class="card">
+<a href="taiz1.html?manga=uur">
+<img src="images/b6e670a6-c6bd-4beb-aa5c-b851ddaeba31.jpg" width="150">
+</a>
+<h3>Үүрийн гэгээ бадрах</h3>
+<p>⭐ 4.1 | 👁 2850</p>
+</div>
+
+<div class="card">
+<a href="taiz1.html?manga=naiz">
+<img src="images/82ff85b2-ce5a-41ac-b0bc-362b42d1a76a.jpg" width="150">
+</a>
+<h3>Найзуудаас ч хачин</h3>
+<p>⭐ 4.1 | 👁 1760</p>
+</div>
+
+</div>
+
+<hr>
+
+<h2>➕ Шинэ манга нэмэх</h2>
+
+<input id="title" placeholder="Манганы нэр">
+<input id="img" placeholder="Зургийн зам (images/...)">
+
+<button onclick="addManga()">Нэмэх</button>
+
+<script>
+
+function addManga(){
+
+let title = document.getElementById("title").value;
+let img = document.getElementById("img").value;
+
+let id = title.replaceAll(" ","").toLowerCase()
+
+document.getElementById("mangaList").innerHTML +=
+
+`<div class="card">
+
+<a href="taiz1.html?manga=${id}">
+<img src="${img}" width="150">
+</a>
+
+<h3>${title}</h3>
+
+<button onclick="this.parentElement.remove()">❌ Устгах</button>
+
+</div>`;
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Manga Reader</title>
+
+<style>
+
+body{
+background:black;
+margin:0;
+font-family:sans-serif;
+text-align:center;
+}
+
+.nav{
+position:fixed;
+top:0;
+width:100%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:black;
+padding:10px;
+box-sizing:border-box;
+z-index:100;
+}
+
+button{
+padding:8px 15px;
+background:#ff3d3d;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#ff5555;
+}
+
+#reader{
+margin-top:60px;
+}
+
+#reader img{
+width:100%;
+max-width:800px;
+display:block;
+margin:10px auto;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="nav">
+
+<button onclick="prev()">⬅ Previous</button>
+
+<button onclick="back()">📚 Chapter list</button>
+
+<button onclick="next()">Next ➡</button>
+
+</div>
+
+<div id="reader"></div>
+
+<script>
+
+let params = new URLSearchParams(location.search)
+
+let manga = params.get("manga")
+let chapterIndex = parseInt(params.get("chapter"))
+
+let chapters = JSON.parse(localStorage.getItem(manga)) || []
+
+if(!chapters.length){
+document.body.innerHTML="<h2 style='color:white'>Chapter олдсонгүй</h2>"
+}
+
+let chapter = chapters[chapterIndex]
+
+let reader = document.getElementById("reader")
+
+if(chapter){
+
+chapter.images.forEach(function(src){
+
+let img=document.createElement("img")
+img.src=src
+
+reader.appendChild(img)
+
+})
+
+}
+
+function prev(){
+
+if(chapterIndex > 0){
+
+location.href=`reader.html?manga=${manga}&chapter=${chapterIndex-1}`
+
+}
+
+}
+
+function next(){
+
+if(chapterIndex < chapters.length-1){
+
+location.href=`reader.html?manga=${manga}&chapter=${chapterIndex+1}`
+
+}
+
+}
+
+function back(){
+
+history.back()
+
+}
+
+</script>
+
+</body>
+</html>
